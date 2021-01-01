@@ -1,0 +1,23 @@
+#app4 .circle {
+  background-color: red;
+  width: 25vw;
+  height: 25vw;
+  border-radius: 50%;
+}
+
+#app4 .circle.active {
+  animation: colorChange 2s infinite;
+}
+
+@keyframes colorChange {
+  0%,
+  100% {
+    background-color: red;
+  }
+  33% {
+    background-color: #26A9DF;
+  }
+  66% {
+    background-color: green;
+  }
+}
