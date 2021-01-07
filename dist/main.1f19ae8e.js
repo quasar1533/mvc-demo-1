@@ -11300,12 +11300,17 @@ var m = {
   }
 };
 var v = {
-  html: "\n  <section id=\"app1\">\n    <div class=\"wrapper\">\n      <div class=\"output\">\n        <span id=\"number\">100</span>\n      </div>\n      <div class=\"buttons\">\n        <button id=\"add1\">+1</button>\n        <button id=\"minus1\">-1</button>\n        <button id=\"multi2\">*2</button>\n        <button id=\"divide2\">/2</button>\n      </div>\n    </div>\n  </section>  \n  ",
+  el: null,
+  //element
+  html: "\n  <section id=\"app1\">\n    <div class=\"wrapper\">\n      <div class=\"output\">\n        <span id=\"number\">{{n}}</span>\n      </div>\n      <div class=\"buttons\">\n        <button id=\"add1\">+1</button>\n        <button id=\"minus1\">-1</button>\n        <button id=\"multi2\">*2</button>\n        <button id=\"divide2\">/2</button>\n      </div>\n    </div>\n  </section>  \n  ",
   render: function render() {
-    var element = (0, _jquery.default)(v.html).appendTo("body > .page");
-  },
-  update: function update() {
-    c.ui.number.text(m.data.n);
+    if (!v.el) {
+      v.el = (0, _jquery.default)(v.html.replace("{{n}}", m.data.n)).appendTo("body > .page");
+    } else {
+      var newEl = (0, _jquery.default)(v.html.replace("{{n}}", m.data.n));
+      v.el.replaceWith(newEl);
+      v.el = newEl;
+    }
   }
 };
 var c = {
@@ -11317,7 +11322,6 @@ var c = {
       btnDivide: (0, _jquery.default)("#divide2"),
       number: (0, _jquery.default)("#number")
     };
-    v.update();
   },
   bindEvents: function bindEvents() {
     c.ui.btnAdd.on("click", function () {
@@ -11476,7 +11480,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "11822" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "5397" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

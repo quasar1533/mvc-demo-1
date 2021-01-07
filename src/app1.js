@@ -7,11 +7,12 @@ const m = {
   },
 };
 const v = {
+  el: null, //element
   html: `
   <section id="app1">
     <div class="wrapper">
       <div class="output">
-        <span id="number">100</span>
+        <span id="number">{{n}}</span>
       </div>
       <div class="buttons">
         <button id="add1">+1</button>
@@ -23,10 +24,13 @@ const v = {
   </section>  
   `,
   render() {
-    const element = $(v.html).appendTo("body > .page");
-  },
-  update() {
-    c.ui.number.text(m.data.n);
+    if (!v.el) {
+      v.el = $(v.html.replace("{{n}}", m.data.n)).appendTo("body > .page");
+    } else {
+      const newEl = $(v.html.replace("{{n}}", m.data.n));
+      v.el.replaceWith(newEl);
+      v.el = newEl;
+    }
   },
 };
 const c = {
@@ -38,7 +42,6 @@ const c = {
       btnDivide: $("#divide2"),
       number: $("#number"),
     };
-    v.update();
   },
   bindEvents() {
     c.ui.btnAdd.on("click", () => {
