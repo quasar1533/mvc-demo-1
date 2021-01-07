@@ -11294,36 +11294,61 @@ var _jquery = _interopRequireDefault(require("jquery"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var $btnAdd = (0, _jquery.default)("#add1");
-var $btnMinus = (0, _jquery.default)("#minus1");
-var $btnMulti = (0, _jquery.default)("#multi2");
-var $btnDivide = (0, _jquery.default)("#divide2");
-var $number = (0, _jquery.default)("#number");
-$number.text(localStorage.getItem("value") || 100);
-$btnAdd.on("click", function () {
-  var n = parseInt($number.text());
-  n += 1;
-  localStorage.setItem("value", n);
-  $number.text(n);
-});
-$btnMinus.on("click", function () {
-  var n = parseInt($number.text());
-  n -= 1;
-  localStorage.setItem("value", n);
-  $number.text(n);
-});
-$btnMulti.on("click", function () {
-  var n = parseInt($number.text());
-  n *= 2;
-  localStorage.setItem("value", n);
-  $number.text(n);
-});
-$btnDivide.on("click", function () {
-  var n = parseInt($number.text());
-  n /= 2;
-  localStorage.setItem("value", n);
-  $number.text(n);
-});
+var m = {
+  data: {
+    n: parseInt(localStorage.getItem("value")) || 100
+  }
+};
+var v = {
+  html: "\n  <section id=\"app1\">\n    <div class=\"wrapper\">\n      <div class=\"output\">\n        <span id=\"number\">100</span>\n      </div>\n      <div class=\"buttons\">\n        <button id=\"add1\">+1</button>\n        <button id=\"minus1\">-1</button>\n        <button id=\"multi2\">*2</button>\n        <button id=\"divide2\">/2</button>\n      </div>\n    </div>\n  </section>  \n  ",
+  render: function render() {
+    var element = (0, _jquery.default)(v.html).appendTo("body > .page");
+  },
+  update: function update() {
+    c.ui.number.text(m.data.n);
+  }
+};
+var c = {
+  init: function init() {
+    c.ui = {
+      btnAdd: (0, _jquery.default)("#add1"),
+      btnMinus: (0, _jquery.default)("#minus1"),
+      btnMulti: (0, _jquery.default)("#multi2"),
+      btnDivide: (0, _jquery.default)("#divide2"),
+      number: (0, _jquery.default)("#number")
+    };
+    v.update();
+  },
+  bindEvents: function bindEvents() {
+    c.ui.btnAdd.on("click", function () {
+      var n = parseInt(c.ui.number.text());
+      n += 1;
+      localStorage.setItem("value", n);
+      c.ui.number.text(n);
+    });
+    c.ui.btnMinus.on("click", function () {
+      var n = parseInt(c.ui.number.text());
+      n -= 1;
+      localStorage.setItem("value", n);
+      c.ui.number.text(n);
+    });
+    c.ui.btnMulti.on("click", function () {
+      var n = parseInt(c.ui.number.text());
+      n *= 2;
+      localStorage.setItem("value", n);
+      c.ui.number.text(n);
+    });
+    c.ui.btnDivide.on("click", function () {
+      var n = parseInt(c.ui.number.text());
+      n /= 2;
+      localStorage.setItem("value", n);
+      c.ui.number.text(n);
+    });
+  }
+};
+v.render();
+c.init();
+c.bindEvents();
 },{"./app1.css":"app1.css","jquery":"../node_modules/jquery/dist/jquery.js"}],"app2.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
@@ -11338,14 +11363,19 @@ var _jquery = _interopRequireDefault(require("jquery"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var html = "\n<section id=\"app2\">\n  <div class=\"wrapper\">\n    <ol class=\"tabBar\">\n      <li><span>item1</span></li>\n      <li><span>item2</span></li>\n    </ol>\n    <ol class=\"tabContent\">\n      <li>111111</li>\n      <li>222222</li>\n    </ol>\n  </div>\n</section>\n";
+var element = (0, _jquery.default)(html).appendTo("body > .page");
+var localKey = "app2.index";
+var index = localStorage.getItem(localKey) || 0;
 var $tabBar = (0, _jquery.default)("#app2 .tabBar");
 $tabBar.on("click", "li", function (e) {
   var $li = (0, _jquery.default)(e.currentTarget);
-  $li.addClass('selected').siblings().removeClass('selected');
+  $li.addClass("selected").siblings().removeClass("selected");
   var index = $li.index();
+  localStorage.setItem(localKey, index);
   (0, _jquery.default)("#app2 .tabContent").children().eq(index).addClass("active").siblings().removeClass("active");
 });
-$tabBar.children().eq(0).trigger("click");
+$tabBar.children().eq(index).trigger("click");
 },{"./app2.css":"app2.css","jquery":"../node_modules/jquery/dist/jquery.js"}],"app3.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
@@ -11360,9 +11390,26 @@ var _jquery = _interopRequireDefault(require("jquery"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var html = "\n<section id=\"app3\">\n  <div class=\"wrapper\">\n    <div class=\"square\"></div>\n  </div>\n</section>\n";
+var element = (0, _jquery.default)(html).appendTo("body > .page");
+var localKey = "app3.active";
 var $square = (0, _jquery.default)("#app3 .square");
+var active = localStorage.getItem(localKey) === "true"; // if (active) {
+//   $square.addClass("active");
+// } else {
+//   $square.removeClass("active");
+// }
+// can be replaced by jQuery toggleClass
+
+$square.toggleClass("active", active);
 $square.on("click", function () {
-  $square.toggleClass("active");
+  if ($square.hasClass("active")) {
+    $square.removeClass("active");
+    localStorage.setItem(localKey, "false");
+  } else {
+    $square.addClass("active");
+    localStorage.setItem(localKey, "true");
+  }
 });
 },{"./app3.css":"app3.css","jquery":"../node_modules/jquery/dist/jquery.js"}],"app4.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
@@ -11378,6 +11425,8 @@ var _jquery = _interopRequireDefault(require("jquery"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var html = "\n<section id=\"app4\">\n  <div class=\"wrapper\">\n    <div class=\"circle\"></div>\n  </div>\n</section>\n";
+var element = (0, _jquery.default)(html).appendTo("body > .page");
 var $circle = (0, _jquery.default)(".circle");
 $circle.on("mouseenter", function () {
   $circle.addClass("active");
@@ -11427,7 +11476,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "7782" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "11822" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
