@@ -42,31 +42,31 @@ body {
   margin-top: -5vh;
 }
 
-#app2 .tabBar {
+#app2 #tabBar {
   display: flex;
 }
 
-#app2 .tabBar > li {
+#app2 #tabBar > li {
   border: 2px solid grey;
   width: 20vw;
   text-align: center;
 }
 
-#app2 .tabBar > li.selected {
+#app2 #tabBar > li.selected {
   background-color: #F5894B;
 }
 
-#app2 .tabContent {
+#app2 #tabContent {
   margin-top: 8vh;
   height: 42px;
 }
-#app2 .tabContent > li {
+#app2 #tabContent > li {
   font-size: 2em;
   text-align: center;
   display: none;
 }
 
-#app2 .tabContent > li.active {
+#app2 #tabContent > li.active {
   display: block;
 }
 

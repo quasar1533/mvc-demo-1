@@ -1,14 +1,26 @@
 import "./app1.css";
 import $ from "jquery";
 
+const localKey = "value";
+const eventBus = $(window);
+
 const m = {
   data: {
-    n: parseInt(localStorage.getItem("value")) || 100,
+    n: parseInt(localStorage.getItem(localKey)) || 100,
   },
+  // model对象经典的CRUD
+  create() {},
+  delete() {},
+  update(data) {
+    Object.assign(m.data, data);
+    eventBus.trigger("m:update");
+    localStorage.setItem(localKey, m.data.n);
+  },
+  read() {},
 };
+
 const v = {
   el: null, //element
-  container: null,
   html: `
   <div class="wrapper">
     <div class="output">
@@ -23,18 +35,22 @@ const v = {
   </div>  
   `,
   init(container) {
-    v.container = $(container);
+    v.el = $(container);
   },
   render(n) {
-    if (v.container.children().length !== 0) v.container.empty();
-    $(v.html.replace("{{n}}", n)).appendTo(v.container);
+    if (v.el.children().length !== 0) v.el.empty();
+    $(v.html.replace("{{n}}", n)).appendTo(v.el);
   },
 };
+
 const c = {
   init(container) {
     v.init(container);
     v.render(m.data.n);
     c.autoBindEvents();
+    eventBus.on("m:update", () => {
+      v.render(m.data.n);
+    });
   },
   events: {
     "click #add1": "add1",
@@ -48,24 +64,20 @@ const c = {
       const spaceIndex = key.indexOf(" ");
       const eventType = key.slice(0, spaceIndex);
       const selector = key.substring(spaceIndex + 1);
-      v.container.on(eventType, selector, value);
+      v.el.on(eventType, selector, value);
     }
   },
   add1() {
-    m.data.n += 1;
-    v.render(m.data.n);
+    m.update({ n: (m.data.n += 1) });
   },
   minus1() {
-    m.data.n -= 1;
-    v.render(m.data.n);
+    m.update({ n: (m.data.n -= 1) });
   },
   multi2() {
-    m.data.n *= 2;
-    v.render(m.data.n);
+    m.update({ n: (m.data.n *= 2) });
   },
   divide2() {
-    m.data.n /= 2;
-    v.render(m.data.n);
+    m.update({ n: (m.data.n /= 2) });
   },
 };
 

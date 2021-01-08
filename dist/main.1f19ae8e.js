@@ -11299,22 +11299,32 @@ var _jquery = _interopRequireDefault(require("jquery"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var localKey = "value";
+var eventBus = (0, _jquery.default)(window);
 var m = {
   data: {
-    n: parseInt(localStorage.getItem("value")) || 100
-  }
+    n: parseInt(localStorage.getItem(localKey)) || 100
+  },
+  // model对象经典的CRUD
+  create: function create() {},
+  delete: function _delete() {},
+  update: function update(data) {
+    Object.assign(m.data, data);
+    eventBus.trigger("m:update");
+    localStorage.setItem(localKey, m.data.n);
+  },
+  read: function read() {}
 };
 var v = {
   el: null,
   //element
-  container: null,
   html: "\n  <div class=\"wrapper\">\n    <div class=\"output\">\n      <span id=\"number\">{{n}}</span>\n    </div>\n    <div class=\"buttons\">\n      <button id=\"add1\">+1</button>\n      <button id=\"minus1\">-1</button>\n      <button id=\"multi2\">*2</button>\n      <button id=\"divide2\">/2</button>\n    </div>\n  </div>  \n  ",
   init: function init(container) {
-    v.container = (0, _jquery.default)(container);
+    v.el = (0, _jquery.default)(container);
   },
   render: function render(n) {
-    if (v.container.children().length !== 0) v.container.empty();
-    (0, _jquery.default)(v.html.replace("{{n}}", n)).appendTo(v.container);
+    if (v.el.children().length !== 0) v.el.empty();
+    (0, _jquery.default)(v.html.replace("{{n}}", n)).appendTo(v.el);
   }
 };
 var c = {
@@ -11322,6 +11332,9 @@ var c = {
     v.init(container);
     v.render(m.data.n);
     c.autoBindEvents();
+    eventBus.on("m:update", function () {
+      v.render(m.data.n);
+    });
   },
   events: {
     "click #add1": "add1",
@@ -11335,24 +11348,28 @@ var c = {
       var spaceIndex = key.indexOf(" ");
       var eventType = key.slice(0, spaceIndex);
       var selector = key.substring(spaceIndex + 1);
-      v.container.on(eventType, selector, value);
+      v.el.on(eventType, selector, value);
     }
   },
   add1: function add1() {
-    m.data.n += 1;
-    v.render(m.data.n);
+    m.update({
+      n: m.data.n += 1
+    });
   },
   minus1: function minus1() {
-    m.data.n -= 1;
-    v.render(m.data.n);
+    m.update({
+      n: m.data.n -= 1
+    });
   },
   multi2: function multi2() {
-    m.data.n *= 2;
-    v.render(m.data.n);
+    m.update({
+      n: m.data.n *= 2
+    });
   },
   divide2: function divide2() {
-    m.data.n /= 2;
-    v.render(m.data.n);
+    m.update({
+      n: m.data.n /= 2
+    });
   }
 };
 var _default = c;
@@ -11365,25 +11382,77 @@ module.hot.accept(reloadCSS);
 },{"_css_loader":"../../../../../AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/css-loader.js"}],"app2.js":[function(require,module,exports) {
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
 require("./app2.css");
 
 var _jquery = _interopRequireDefault(require("jquery"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var html = "\n<section id=\"app2\">\n  <div class=\"wrapper\">\n    <ol class=\"tabBar\">\n      <li><span>item1</span></li>\n      <li><span>item2</span></li>\n    </ol>\n    <ol class=\"tabContent\">\n      <li>111111</li>\n      <li>222222</li>\n    </ol>\n  </div>\n</section>\n";
-var element = (0, _jquery.default)(html).appendTo("body > .page");
 var localKey = "app2.index";
-var index = localStorage.getItem(localKey) || 0;
-var $tabBar = (0, _jquery.default)("#app2 .tabBar");
-$tabBar.on("click", "li", function (e) {
-  var $li = (0, _jquery.default)(e.currentTarget);
-  $li.addClass("selected").siblings().removeClass("selected");
-  var index = $li.index();
-  localStorage.setItem(localKey, index);
-  (0, _jquery.default)("#app2 .tabContent").children().eq(index).addClass("active").siblings().removeClass("active");
-});
-$tabBar.children().eq(index).trigger("click");
+var eventBus = (0, _jquery.default)(window);
+var m = {
+  data: {
+    index: parseInt(localStorage.getItem(localKey)) || 0
+  },
+  // model对象经典的CRUD
+  create: function create() {},
+  delete: function _delete() {},
+  update: function update(data) {
+    Object.assign(m.data, data);
+    eventBus.trigger("m:update");
+    localStorage.setItem(localKey, m.data.index);
+  },
+  read: function read() {}
+};
+var v = {
+  el: null,
+  //element
+  html: function html(index) {
+    return "\n    <div class=\"wrapper\">\n      <ol id=\"tabBar\">\n        <li class=\"".concat(index === 0 ? "selected" : "", "\" data-index=\"0\"><span>item1</span></li>\n        <li class=\"").concat(index === 1 ? "selected" : "", "\" data-index=\"1\"><span>item2</span></li>\n      </ol>\n      <ol id=\"tabContent\">\n        <li class=").concat(index === 0 ? "active" : "", ">111111</li>\n        <li class=").concat(index === 1 ? "active" : "", ">222222</li>\n      </ol>\n    </div>\n    ");
+  },
+  init: function init(container) {
+    v.el = (0, _jquery.default)(container);
+  },
+  render: function render(index) {
+    if (v.el.children().length !== 0) v.el.empty();
+    (0, _jquery.default)(v.html(index)).appendTo(v.el);
+  }
+};
+var c = {
+  init: function init(container) {
+    v.init(container);
+    v.render(m.data.index);
+    c.autoBindEvents();
+    eventBus.on("m:update", function () {
+      v.render(m.data.index);
+    });
+  },
+  events: {
+    "click #tabBar > li": "toggle"
+  },
+  autoBindEvents: function autoBindEvents() {
+    for (var key in c.events) {
+      var value = c[c.events[key]];
+      var spaceIndex = key.indexOf(" ");
+      var eventType = key.slice(0, spaceIndex);
+      var selector = key.substring(spaceIndex + 1);
+      v.el.on(eventType, selector, value);
+    }
+  },
+  toggle: function toggle(e) {
+    var index = parseInt(e.currentTarget.dataset.index);
+    m.update({
+      index: index
+    });
+  }
+};
+var _default = c;
+exports.default = _default;
 },{"./app2.css":"app2.css","jquery":"../node_modules/jquery/dist/jquery.js"}],"app3.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
@@ -11451,7 +11520,7 @@ require("./global.css");
 
 var _app = _interopRequireDefault(require("./app1.js"));
 
-require("./app2.js");
+var _app2 = _interopRequireDefault(require("./app2.js"));
 
 require("./app3.js");
 
@@ -11460,6 +11529,8 @@ require("./app4.js");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _app.default.init("#app1");
+
+_app2.default.init("#app2");
 },{"./reset.css":"reset.css","./global.css":"global.css","./app1.js":"app1.js","./app2.js":"app2.js","./app3.js":"app3.js","./app4.js":"app4.js"}],"../../../../../AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -11488,7 +11559,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "12058" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "12873" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -1,37 +1,79 @@
 import "./app2.css";
 import $ from "jquery";
 
-const html = `
-<section id="app2">
-  <div class="wrapper">
-    <ol class="tabBar">
-      <li><span>item1</span></li>
-      <li><span>item2</span></li>
-    </ol>
-    <ol class="tabContent">
-      <li>111111</li>
-      <li>222222</li>
-    </ol>
-  </div>
-</section>
-`;
-const element = $(html).appendTo("body > .page");
-
 const localKey = "app2.index";
-const index = localStorage.getItem(localKey) || 0;
+const eventBus = $(window);
 
-const $tabBar = $("#app2 .tabBar");
-$tabBar.on("click", "li", (e) => {
-  const $li = $(e.currentTarget);
-  $li.addClass("selected").siblings().removeClass("selected");
-  let index = $li.index();
-  localStorage.setItem(localKey, index);
-  $("#app2 .tabContent")
-    .children()
-    .eq(index)
-    .addClass("active")
-    .siblings()
-    .removeClass("active");
-});
+const m = {
+  data: {
+    index: parseInt(localStorage.getItem(localKey)) || 0,
+  },
+  // model对象经典的CRUD
+  create() {},
+  delete() {},
+  update(data) {
+    Object.assign(m.data, data);
+    eventBus.trigger("m:update");
+    localStorage.setItem(localKey, m.data.index);
+  },
+  read() {},
+};
 
-$tabBar.children().eq(index).trigger("click");
+const v = {
+  el: null, //element
+  html(index) {
+    return `
+    <div class="wrapper">
+      <ol id="tabBar">
+        <li class="${
+          index === 0 ? "selected" : ""
+        }" data-index="0"><span>item1</span></li>
+        <li class="${
+          index === 1 ? "selected" : ""
+        }" data-index="1"><span>item2</span></li>
+      </ol>
+      <ol id="tabContent">
+        <li class=${index === 0 ? "active" : ""}>111111</li>
+        <li class=${index === 1 ? "active" : ""}>222222</li>
+      </ol>
+    </div>
+    `;
+  },
+  init(container) {
+    v.el = $(container);
+  },
+  render(index) {
+    if (v.el.children().length !== 0) v.el.empty();
+    $(v.html(index)).appendTo(v.el);
+  },
+};
+
+const c = {
+  init(container) {
+    v.init(container);
+    v.render(m.data.index);
+    c.autoBindEvents();
+    eventBus.on("m:update", () => {
+      v.render(m.data.index);
+    });
+  },
+  events: {
+    "click #tabBar > li": "toggle",
+  },
+  autoBindEvents() {
+    for (let key in c.events) {
+      const value = c[c.events[key]];
+      const spaceIndex = key.indexOf(" ");
+      const eventType = key.slice(0, spaceIndex);
+      const selector = key.substring(spaceIndex + 1);
+      v.el.on(eventType, selector, value);
+    }
+  },
+  toggle(e) {
+    const index = parseInt(e.currentTarget.dataset.index);
+    m.update({ index: index });
+  },
+};
+
+
+export default c;
