@@ -13,6 +13,7 @@ const element = $(html).appendTo("body > .page");
 const localKey = "app3.active";
 const $square = $("#app3 .square");
 const active = localStorage.getItem(localKey) === "true";
+
 // if (active) {
 //   $square.addClass("active");
 // } else {
