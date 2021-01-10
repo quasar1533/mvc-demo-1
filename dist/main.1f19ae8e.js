@@ -11299,7 +11299,8 @@ var _jquery = _interopRequireDefault(require("jquery"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var localKey = "value";
+var localKey = "value"; // localStorage记录键名
+
 var eventBus = (0, _jquery.default)(window);
 var m = {
   data: {
@@ -11315,27 +11316,20 @@ var m = {
   },
   read: function read() {}
 };
-var v = {
-  el: null,
-  //element
-  html: "\n  <div class=\"wrapper\">\n    <div class=\"output\">\n      <span id=\"number\">{{n}}</span>\n    </div>\n    <div class=\"buttons\">\n      <button id=\"add1\">+1</button>\n      <button id=\"minus1\">-1</button>\n      <button id=\"multi2\">*2</button>\n      <button id=\"divide2\">/2</button>\n    </div>\n  </div>  \n  ",
+var view = {
   init: function init(container) {
-    v.el = (0, _jquery.default)(container);
-  },
-  render: function render(n) {
-    if (v.el.children().length !== 0) v.el.empty();
-    (0, _jquery.default)(v.html.replace("{{n}}", n)).appendTo(v.el);
-  }
-};
-var c = {
-  init: function init(container) {
-    v.init(container);
-    v.render(m.data.n);
-    c.autoBindEvents();
+    view.el = (0, _jquery.default)(container);
+    view.render(m.data.n);
+    view.autoBindEvents();
     eventBus.on("m:update", function () {
-      v.render(m.data.n);
+      view.render(m.data.n);
     });
   },
+  render: function render(n) {
+    if (view.el.children().length !== 0) view.el.empty();
+    (0, _jquery.default)(view.html.replace("{{n}}", n)).appendTo(view.el);
+  },
+  html: "\n  <div class=\"wrapper\">\n    <div class=\"output\">\n      <span id=\"number\">{{n}}</span>\n    </div>\n    <div class=\"buttons\">\n      <button id=\"add1\">+1</button>\n      <button id=\"minus1\">-1</button>\n      <button id=\"multi2\">*2</button>\n      <button id=\"divide2\">/2</button>\n    </div>\n  </div>  \n  ",
   events: {
     "click #add1": "add1",
     "click #minus1": "minus1",
@@ -11343,12 +11337,12 @@ var c = {
     "click #divide2": "divide2"
   },
   autoBindEvents: function autoBindEvents() {
-    for (var key in c.events) {
-      var value = c[c.events[key]];
+    for (var key in view.events) {
+      var value = view[view.events[key]];
       var spaceIndex = key.indexOf(" ");
       var eventType = key.slice(0, spaceIndex);
       var selector = key.substring(spaceIndex + 1);
-      v.el.on(eventType, selector, value);
+      view.el.on(eventType, selector, value);
     }
   },
   add1: function add1() {
@@ -11372,7 +11366,7 @@ var c = {
     });
   }
 };
-var _default = c;
+var _default = view;
 exports.default = _default;
 },{"./app1.css":"app1.css","jquery":"../node_modules/jquery/dist/jquery.js"}],"app2.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
@@ -11393,7 +11387,8 @@ var _jquery = _interopRequireDefault(require("jquery"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var localKey = "app2.index";
+var localKey = "app2.index"; // localStorage记录键名
+
 var eventBus = (0, _jquery.default)(window);
 var m = {
   data: {
@@ -11409,39 +11404,32 @@ var m = {
   },
   read: function read() {}
 };
-var v = {
-  el: null,
-  //element
-  html: function html(index) {
-    return "\n    <div class=\"wrapper\">\n      <ol id=\"tabBar\">\n        <li class=\"".concat(index === 0 ? "selected" : "", "\" data-index=\"0\"><span>item1</span></li>\n        <li class=\"").concat(index === 1 ? "selected" : "", "\" data-index=\"1\"><span>item2</span></li>\n      </ol>\n      <ol id=\"tabContent\">\n        <li class=").concat(index === 0 ? "active" : "", ">111111</li>\n        <li class=").concat(index === 1 ? "active" : "", ">222222</li>\n      </ol>\n    </div>\n    ");
-  },
+var view = {
   init: function init(container) {
-    v.el = (0, _jquery.default)(container);
-  },
-  render: function render(index) {
-    if (v.el.children().length !== 0) v.el.empty();
-    (0, _jquery.default)(v.html(index)).appendTo(v.el);
-  }
-};
-var c = {
-  init: function init(container) {
-    v.init(container);
-    v.render(m.data.index);
-    c.autoBindEvents();
+    view.el = (0, _jquery.default)(container);
+    view.render(m.data.index);
+    view.autoBindEvents();
     eventBus.on("m:update", function () {
-      v.render(m.data.index);
+      view.render(m.data.index);
     });
   },
   events: {
     "click #tabBar > li": "toggle"
   },
+  html: function html(index) {
+    return "\n    <div class=\"wrapper\">\n      <ol id=\"tabBar\">\n        <li class=\"".concat(index === 0 ? "selected" : "", "\" data-index=\"0\"><span>item1</span></li>\n        <li class=\"").concat(index === 1 ? "selected" : "", "\" data-index=\"1\"><span>item2</span></li>\n      </ol>\n      <ol id=\"tabContent\">\n        <li class=").concat(index === 0 ? "active" : "", ">111111</li>\n        <li class=").concat(index === 1 ? "active" : "", ">222222</li>\n      </ol>\n    </div>\n    ");
+  },
+  render: function render(index) {
+    if (view.el.children().length !== 0) view.el.empty();
+    (0, _jquery.default)(view.html(index)).appendTo(view.el);
+  },
   autoBindEvents: function autoBindEvents() {
-    for (var key in c.events) {
-      var value = c[c.events[key]];
+    for (var key in view.events) {
+      var value = view[view.events[key]];
       var spaceIndex = key.indexOf(" ");
       var eventType = key.slice(0, spaceIndex);
       var selector = key.substring(spaceIndex + 1);
-      v.el.on(eventType, selector, value);
+      view.el.on(eventType, selector, value);
     }
   },
   toggle: function toggle(e) {
@@ -11451,7 +11439,7 @@ var c = {
     });
   }
 };
-var _default = c;
+var _default = view;
 exports.default = _default;
 },{"./app2.css":"app2.css","jquery":"../node_modules/jquery/dist/jquery.js"}],"app3.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
@@ -11559,7 +11547,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "1997" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "9677" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -1,7 +1,7 @@
 import "./app2.css";
 import $ from "jquery";
 
-const localKey = "app2.index";
+const localKey = "app2.index";  // localStorage记录键名
 const eventBus = $(window);
 
 const m = {
@@ -19,8 +19,18 @@ const m = {
   read() {},
 };
 
-const v = {
-  el: null, //element
+const view = {
+  init(container) {
+    view.el = $(container);
+    view.render(m.data.index);
+    view.autoBindEvents();
+    eventBus.on("m:update", () => {
+      view.render(m.data.index);
+    });
+  },
+  events: {
+    "click #tabBar > li": "toggle",
+  },
   html(index) {
     return `
     <div class="wrapper">
@@ -39,34 +49,17 @@ const v = {
     </div>
     `;
   },
-  init(container) {
-    v.el = $(container);
-  },
   render(index) {
-    if (v.el.children().length !== 0) v.el.empty();
-    $(v.html(index)).appendTo(v.el);
-  },
-};
-
-const c = {
-  init(container) {
-    v.init(container);
-    v.render(m.data.index);
-    c.autoBindEvents();
-    eventBus.on("m:update", () => {
-      v.render(m.data.index);
-    });
-  },
-  events: {
-    "click #tabBar > li": "toggle",
+    if (view.el.children().length !== 0) view.el.empty();
+    $(view.html(index)).appendTo(view.el);
   },
   autoBindEvents() {
-    for (let key in c.events) {
-      const value = c[c.events[key]];
+    for (let key in view.events) {
+      const value = view[view.events[key]];
       const spaceIndex = key.indexOf(" ");
       const eventType = key.slice(0, spaceIndex);
       const selector = key.substring(spaceIndex + 1);
-      v.el.on(eventType, selector, value);
+      view.el.on(eventType, selector, value);
     }
   },
   toggle(e) {
@@ -76,4 +69,4 @@ const c = {
 };
 
 
-export default c;
+export default view;

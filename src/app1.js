@@ -1,7 +1,7 @@
 import "./app1.css";
 import $ from "jquery";
 
-const localKey = "value";
+const localKey = "value";   // localStorage记录键名
 const eventBus = $(window);
 
 const m = {
@@ -19,8 +19,19 @@ const m = {
   read() {},
 };
 
-const v = {
-  el: null, //element
+const view = {
+  init(container) {
+    view.el = $(container);
+    view.render(m.data.n);
+    view.autoBindEvents();
+    eventBus.on("m:update", () => {
+      view.render(m.data.n);
+    });
+  },
+  render(n) {
+    if (view.el.children().length !== 0) view.el.empty();
+    $(view.html.replace("{{n}}", n)).appendTo(view.el);
+  },
   html: `
   <div class="wrapper">
     <div class="output">
@@ -34,24 +45,6 @@ const v = {
     </div>
   </div>  
   `,
-  init(container) {
-    v.el = $(container);
-  },
-  render(n) {
-    if (v.el.children().length !== 0) v.el.empty();
-    $(v.html.replace("{{n}}", n)).appendTo(v.el);
-  },
-};
-
-const c = {
-  init(container) {
-    v.init(container);
-    v.render(m.data.n);
-    c.autoBindEvents();
-    eventBus.on("m:update", () => {
-      v.render(m.data.n);
-    });
-  },
   events: {
     "click #add1": "add1",
     "click #minus1": "minus1",
@@ -59,12 +52,12 @@ const c = {
     "click #divide2": "divide2",
   },
   autoBindEvents() {
-    for (let key in c.events) {
-      const value = c[c.events[key]];
+    for (let key in view.events) {
+      const value = view[view.events[key]];
       const spaceIndex = key.indexOf(" ");
       const eventType = key.slice(0, spaceIndex);
       const selector = key.substring(spaceIndex + 1);
-      v.el.on(eventType, selector, value);
+      view.el.on(eventType, selector, value);
     }
   },
   add1() {
@@ -81,4 +74,4 @@ const c = {
   },
 };
 
-export default c;
+export default view;
