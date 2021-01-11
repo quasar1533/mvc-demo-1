@@ -11285,56 +11285,7 @@ if ( typeof noGlobal === "undefined" ) {
 return jQuery;
 } );
 
-},{"process":"../../../../../AppData/Local/Yarn/Data/global/node_modules/process/browser.js"}],"base/Model.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var Model = /*#__PURE__*/function () {
-  function Model(options) {
-    var _this = this;
-
-    _classCallCheck(this, Model);
-
-    ["data", "create", "update", "delete", "read"].forEach(function (key) {
-      if (key in options) {
-        _this[key] = options[key];
-      }
-    });
-  } // constructor(options) {
-  //   Object.assign(this, options);
-  // }
-
-
-  _createClass(Model, [{
-    key: "create",
-    value: function create() {}
-  }, {
-    key: "delete",
-    value: function _delete() {}
-  }, {
-    key: "update",
-    value: function update() {}
-  }, {
-    key: "read",
-    value: function read() {}
-  }]);
-
-  return Model;
-}();
-
-var _default = Model;
-exports.default = _default;
-},{}],"base/View.js":[function(require,module,exports) {
+},{"process":"../../../../../AppData/Local/Yarn/Data/global/node_modules/process/browser.js"}],"base/EventBus.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11352,19 +11303,180 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var View = /*#__PURE__*/function () {
+var EventBus = /*#__PURE__*/function () {
+  function EventBus() {
+    _classCallCheck(this, EventBus);
+
+    this._eventBus = (0, _jquery.default)(window); // As a private variable
+  }
+
+  _createClass(EventBus, [{
+    key: "on",
+    value: function on(eventType, handler) {
+      this._eventBus.on(eventType, handler);
+    }
+  }, {
+    key: "trigger",
+    value: function trigger(eventType, params) {
+      this._eventBus.trigger(eventType, params);
+    }
+  }, {
+    key: "off",
+    value: function off(eventType, handler) {
+      this._eventBus.off(eventType, handler);
+    }
+  }]);
+
+  return EventBus;
+}();
+
+var _default = EventBus;
+exports.default = _default;
+},{"jquery":"../node_modules/jquery/dist/jquery.js"}],"base/Model.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _EventBus2 = _interopRequireDefault(require("./EventBus.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var Model = /*#__PURE__*/function (_EventBus) {
+  _inherits(Model, _EventBus);
+
+  var _super = _createSuper(Model);
+
+  function Model(options) {
+    var _this;
+
+    _classCallCheck(this, Model);
+
+    _this = _super.call(this);
+    ["data", "create", "update", "delete", "read"].forEach(function (key) {
+      if (key in options) {
+        _this[key] = options[key];
+      }
+    });
+    return _this;
+  } // constructor(options) {
+  //   Object.assign(this, options);
+  // }
+
+
+  _createClass(Model, [{
+    key: "create",
+    value: function create() {
+      var _console, _console$log;
+
+      // Optional Chaining
+      (_console = console) === null || _console === void 0 ? void 0 : (_console$log = _console.log) === null || _console$log === void 0 ? void 0 : _console$log.call(_console, "Method has not implemented yet"); // console && console.log && console.log("Method has not implemented yet");
+    }
+  }, {
+    key: "delete",
+    value: function _delete() {
+      console && console.log && console.log("Method has not implemented yet");
+    }
+  }, {
+    key: "update",
+    value: function update() {
+      console && console.log && console.log("Method has not implemented yet");
+    }
+  }, {
+    key: "read",
+    value: function read() {
+      console && console.log && console.log("Method has not implemented yet");
+    }
+  }]);
+
+  return Model;
+}(_EventBus2.default);
+
+var _default = Model;
+exports.default = _default;
+},{"./EventBus.js":"base/EventBus.js"}],"base/View.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _jquery = _interopRequireDefault(require("jquery"));
+
+var _EventBus2 = _interopRequireDefault(require("./EventBus.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var View = /*#__PURE__*/function (_EventBus) {
+  _inherits(View, _EventBus);
+
+  var _super = _createSuper(View);
+
   function View(options) {
-    var _this = this;
+    var _this;
 
     _classCallCheck(this, View);
 
-    Object.assign(this, options);
-    this.el = (0, _jquery.default)(this.el);
-    this.render(this.data);
-    this.autoBindEvents();
-    this.eventBus.on("m:update", function () {
+    _this = _super.call(this);
+    Object.assign(_assertThisInitialized(_this), options);
+    _this.el = (0, _jquery.default)(_this.el);
+
+    _this.render(_this.data);
+
+    _this.autoBindEvents();
+
+    _this.on("m:update", function () {
       _this.render(_this.data);
     });
+
+    return _this;
   }
 
   _createClass(View, [{
@@ -11381,11 +11493,11 @@ var View = /*#__PURE__*/function () {
   }]);
 
   return View;
-}();
+}(_EventBus2.default);
 
 var _default = View;
 exports.default = _default;
-},{"jquery":"../node_modules/jquery/dist/jquery.js"}],"app1.js":[function(require,module,exports) {
+},{"jquery":"../node_modules/jquery/dist/jquery.js","./EventBus.js":"base/EventBus.js"}],"app1.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11405,14 +11517,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var localKey = "value"; // localStorage记录键名
 
-var eventBus = (0, _jquery.default)(window);
 var m = new _Model.default({
   data: {
     n: parseFloat(localStorage.getItem(localKey)) || 100
   },
   update: function update(data) {
     Object.assign(this.data, data);
-    eventBus.trigger("m:update");
+    this.trigger("m:update");
     localStorage.setItem(localKey, this.data.n);
   }
 });
@@ -11421,7 +11532,6 @@ var init = function init(container) {
   new _View.default({
     el: container,
     data: m.data,
-    eventBus: eventBus,
     html: "\n      <div class=\"wrapper\">\n        <div class=\"output\">\n          <span id=\"number\">{{n}}</span>\n        </div>\n        <div class=\"buttons\">\n          <button id=\"add1\">+1</button>\n          <button id=\"minus1\">-1</button>\n          <button id=\"multi2\">*2</button>\n          <button id=\"divide2\">/2</button>\n        </div>\n      </div>  \n      ",
     render: function render(data) {
       var n = data.n;
@@ -11493,14 +11603,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var localKey = "app2.index"; // localStorage记录键名
 
-var eventBus = (0, _jquery.default)(window);
 var m = new _Model.default({
   data: {
     index: parseInt(localStorage.getItem(localKey)) || 0
   },
   update: function update(data) {
     Object.assign(this.data, data);
-    eventBus.trigger("m:update");
+    this.trigger("m:update");
     localStorage.setItem(localKey, this.data.index);
   }
 });
@@ -11509,7 +11618,6 @@ var init = function init(container) {
   new _View.default({
     el: container,
     data: m.data,
-    eventBus: eventBus,
     events: {
       "click #tabBar > li": "toggle"
     },
@@ -11646,7 +11754,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "12139" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "5402" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

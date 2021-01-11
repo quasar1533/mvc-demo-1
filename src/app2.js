@@ -4,7 +4,6 @@ import Model from "./base/Model.js";
 import View from "./base/View.js";
 
 const localKey = "app2.index"; // localStorage记录键名
-const eventBus = $(window);
 
 const m = new Model({
   data: {
@@ -12,7 +11,7 @@ const m = new Model({
   },
   update(data) {
     Object.assign(this.data, data);
-    eventBus.trigger("m:update");
+    this.trigger("m:update");
     localStorage.setItem(localKey, this.data.index);
   },
 });
@@ -21,7 +20,6 @@ const init = (container) => {
   new View({
     el: container,
     data: m.data,
-    eventBus: eventBus,
     events: {
       "click #tabBar > li": "toggle",
     },
