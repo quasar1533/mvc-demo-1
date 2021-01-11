@@ -1,38 +1,32 @@
 import "./app2.css";
 import $ from "jquery";
+import Model from "./base/Model.js";
+import View from "./base/View.js";
 
-const localKey = "app2.index";  // localStorage记录键名
+const localKey = "app2.index"; // localStorage记录键名
 const eventBus = $(window);
 
-const m = {
+const m = new Model({
   data: {
     index: parseInt(localStorage.getItem(localKey)) || 0,
   },
-  // model对象经典的CRUD
-  create() {},
-  delete() {},
   update(data) {
-    Object.assign(m.data, data);
+    Object.assign(this.data, data);
     eventBus.trigger("m:update");
-    localStorage.setItem(localKey, m.data.index);
+    localStorage.setItem(localKey, this.data.index);
   },
-  read() {},
-};
+});
 
-const view = {
-  init(container) {
-    view.el = $(container);
-    view.render(m.data.index);
-    view.autoBindEvents();
-    eventBus.on("m:update", () => {
-      view.render(m.data.index);
-    });
-  },
-  events: {
-    "click #tabBar > li": "toggle",
-  },
-  html(index) {
-    return `
+const init = (container) => {
+  new View({
+    el: container,
+    data: m.data,
+    eventBus: eventBus,
+    events: {
+      "click #tabBar > li": "toggle",
+    },
+    html(index) {
+      return `
     <div class="wrapper">
       <ol id="tabBar">
         <li class="${
@@ -48,25 +42,26 @@ const view = {
       </ol>
     </div>
     `;
-  },
-  render(index) {
-    if (view.el.children().length !== 0) view.el.empty();
-    $(view.html(index)).appendTo(view.el);
-  },
-  autoBindEvents() {
-    for (let key in view.events) {
-      const value = view[view.events[key]];
-      const spaceIndex = key.indexOf(" ");
-      const eventType = key.slice(0, spaceIndex);
-      const selector = key.substring(spaceIndex + 1);
-      view.el.on(eventType, selector, value);
-    }
-  },
-  toggle(e) {
-    const index = parseInt(e.currentTarget.dataset.index);
-    m.update({ index: index });
-  },
+    },
+    render(data) {
+      const index = data.index;
+      if (this.el.children().length !== 0) this.el.empty();
+      $(this.html(index)).appendTo(this.el);
+    },
+    autoBindEvents() {
+      for (let key in this.events) {
+        const value = this[this.events[key]];
+        const spaceIndex = key.indexOf(" ");
+        const eventType = key.slice(0, spaceIndex);
+        const selector = key.substring(spaceIndex + 1);
+        this.el.on(eventType, selector, value);
+      }
+    },
+    toggle(e) {
+      const index = parseInt(e.currentTarget.dataset.index);
+      m.update({ index: index });
+    },
+  });
 };
 
-
-export default view;
+export default init;

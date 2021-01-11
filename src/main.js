@@ -6,5 +6,5 @@ import v2 from "./app2.js";
 import "./app3.js";
 import "./app4.js";
 
-v1.init("#app1");
-v2.init("#app2");
+v1("#app1");
+v2("#app2");
