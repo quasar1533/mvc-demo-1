@@ -5,6 +5,10 @@
   "author": "quasar1533 <1029230641@qq.com>",
   "license": "MIT",
   "dependencies": {
-    "jquery": "^3.5.1"
-  }
+    "jquery": "^3.5.1",
+    "vue": "^2.6.12"
+  },
+  "alias": {
+    "vue" : "./node_modules/vue/dist/vue.common.js"
+}
 }
